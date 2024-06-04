@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wayshub-frontend
+  namespace: default
+  labels:
+    app: wayshub-frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: wayshub-frontend
+  template:
+    metadata:
+      labels:
+        app: wayshub-frontend
+    spec:
+      containers:
+        - name: wayshub-frontend
+          image: komarkun/wayshub-frontend-prod:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
